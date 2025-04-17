@@ -11,7 +11,7 @@ void swap(int *a, int *b) {
 
 // Partition function for Quick Sort
 int partition(int arr[], int low, int high) {
-    int pivot = arr[high]; // Choosing last element as pivot
+    int pivot = arr[high];
     int i = low - 1;
 
     for (int j = low; j < high; j++) {
@@ -25,7 +25,7 @@ int partition(int arr[], int low, int high) {
     return i + 1;
 }
 
-// Quick Sort recursive function
+// Recursive Quick Sort function
 void quickSort(int arr[], int low, int high) {
     if (low < high) {
         int pi = partition(arr, low, high);
@@ -36,69 +36,32 @@ void quickSort(int arr[], int low, int high) {
 }
 
 int main() {
-    FILE *file;
-
-    // Generate random numbers and write to file
-    file = fopen("numbers.txt", "w");
-    if (file == NULL) {
-        printf("Error opening file for writing.\n");
-        return 1;
-    }
-
-    srand(time(NULL));
-    int n_values[] = {10, 100, 1000, 10000};
-
-    for (int k = 0; k < sizeof(n_values) / sizeof(n_values[0]); k++) {
-        int n = n_values[k];
-        fprintf(file, "n = %d\n", n);
-        for (int i = 0; i < n; i++) {
-            fprintf(file, "%d ", rand() % 1000);
-        }
-        fprintf(file, "\n");
-    }
-    fclose(file);
-
-    // Read numbers from file and sort
-    file = fopen("numbers.txt", "r");
-    if (file == NULL) {
-        printf("Error opening file for reading.\n");
-        return 1;
-    }
-
     int n;
-    clock_t start, end;
-    double cpu_time_used;
+    printf("Enter number of elements to sort: ");
+    scanf("%d", &n);
 
-    while (fscanf(file, "n = %d", &n) == 1) {
-        int *arr = (int *)malloc(n * sizeof(int));
-        if (arr == NULL) {
-            printf("Memory allocation failed.\n");
-            return 1;
-        }
+    int arr[n];
 
-        for (int i = 0; i < n; i++) {
-            fscanf(file, "%d", &arr[i]);
-        }
-
-        start = clock();
-        quickSort(arr, 0, n - 1);
-        end = clock();
-
-        cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
-        printf("Time taken to sort %d elements using Quick sort: %lf seconds\n", n, cpu_time_used);
-
-        // Print sorted array if n == 10
-        if (n == 10) {
-            printf("Sorted elements:\n");
-            for (int i = 0; i < n; i++) {
-                printf("%d ", arr[i]);
-            }
-            printf("\n");
-        }
-
-        free(arr);
+    // Generate same random numbers every time (no srand used)
+    for (int i = 0; i < n; i++) {
+        arr[i] = rand() % 1000;  // random number between 0 and 999
     }
 
-    fclose(file);
+    clock_t start = clock();
+    quickSort(arr, 0, n - 1);
+    clock_t end = clock();
+
+    double cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Time taken to sort %d elements using Quick sort: %lf seconds\n", n, cpu_time_used);
+
+    // Print array if small
+    if (n <= 10) {
+        printf("Sorted elements:\n");
+        for (int i = 0; i < n; i++) {
+            printf("%d ", arr[i]);
+        }
+        printf("\n");
+    }
+
     return 0;
 }
